@@ -39,7 +39,7 @@ var parseExpression = (program) => {
     } else if (match = /^\d+\b/.exec(program)) {
       expr = {type: "value", value: Number(match[0])}
     } else if (match = /^[^\s(),"]+/.exec(program)) {
-      expr = {type: "word", value: match[0]}
+      expr = {type: "word", name: match[0]}
     } else {
       throw new SyntaxError("Unexpected Syntax: " + program)
     }
@@ -104,6 +104,7 @@ var evaluate = (expr, env) => {
       if (expr.name in env) {
         return env[expr.name];
       } else {
+        console.log(expr)
         throw new ReferenceError("Undefined variable: " + expr.name )
       }
 
@@ -174,10 +175,10 @@ specialForms['do'] = (args, env) => {
 }
 
 specialForms['define'] = (args, env) => {
-  if (args.length != 2 || args[0].type == 'word' ){
+  if (args.length != 2 || args[0].type != 'word' ){
     throw new SyntaxError("Bad use of define")
   }
-  var value = evaluate(arg[1], env);
+  var value = evaluate(args[1], env);
   env[args[0].name] = value;
   return value
 }
@@ -206,11 +207,10 @@ function run() {
 
 console.log(topEnv)
 
-/*
+
 run("do(define(total, 0),",
-    " define(count, 1),",
-    " while(<(count, 11),",
-    " do(define(total, +(total, count)),",
-    " define(count, +(count, 1)))),",
-    " print(total))");
-*/
+    "   define(count, 1),",
+    "   while(<(count, 11),",
+    "         do(define(total, +(total, count)),",
+    "             define(count, +(count, 1)))),",
+    "   print(total))");
