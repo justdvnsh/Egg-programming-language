@@ -36,7 +36,7 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Example
 
-*```
+```
 run("do(define(total, 0),",
     "   define(count, 1),",
     "   while(<(count, 11),",
@@ -46,7 +46,7 @@ run("do(define(total, 0),",
 	// -> 55
 ```
 
-*```
+```
 run(`
 do(define(plusOne, fun(a, +(a, 1))),
    print(plusOne(10)))
@@ -54,7 +54,7 @@ do(define(plusOne, fun(a, +(a, 1))),
 // → 11
 ```
 
-*```
+```
 run(`
 do(define(pow, fun(base, exp,
      if(==(exp, 0),
