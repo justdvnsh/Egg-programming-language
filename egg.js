@@ -15,12 +15,9 @@
 
 
 // skip the white space from the program
-var skipspace = (program) => {
-    var first = program.search(/\S/);
-    if (first === -1) {
-      return ""
-    }
-    return program.slice(first);
+function skipspace(string) {
+  let skippable = string.match(/^(\s|#.*)*/);
+  return string.slice(skippable[0].length);
 }
 
 //console.log(skipspace("                      Hellohow         are you"))
@@ -183,6 +180,22 @@ specialForms['define'] = (args, env) => {
   return value
 }
 
+specialForms.set = (args, env) => {
+  if (args.length != 2 || args[0].type != "word") {
+    throw new SyntaxError("Bad use of set");
+  }
+  let varName = args[0].name;
+  let value = evaluate(args[1], env);
+
+  for (let scope = env; scope; scope = Object.getPrototypeOf(scope)) {
+    if (Object.prototype.hasOwnProperty.call(scope, varName)) {
+      scope[varName] = value;
+      return value;
+    }
+  }
+  throw new ReferenceError(`Setting undefined variable ${varName}`);
+};
+
 // Creating the Environment.....(Global)
 
 var topEnv = Object.create(null);
@@ -198,6 +211,12 @@ topEnv['print'] = (value) => {
   console.log(value);
   return value;
 }
+
+topEnv['array'] = (...values) => values;
+
+topEnv.length = array => array.length;
+
+topEnv.element = (array, i) => array[i];
 
 function run() {
   var env = Object.create(topEnv);
@@ -253,3 +272,34 @@ do(define(pow, fun(base, exp,
    print(pow(2, 10)))
 `);
 // → 1024
+
+run(`
+do(define(sum, fun(array,
+     do(define(i, 0),
+        define(sum, 0),
+        while(<(i, length(array)),
+          do(define(sum, +(sum, element(array, i))),
+             define(i, +(i, 1)))),
+        sum))),
+   print(sum(array(1, 2, 3))))
+`);
+//-> 6
+
+console.log(parse("# hello\nx"));
+// → {type: "word", name: "x"}
+
+console.log(parse("a # one\n   # two\n()"));
+// → {type: "apply",
+//    operator: {type: "word", name: "a"},
+//    args: []}
+
+run(`
+do(define(x, 4),
+   define(setx, fun(val, set(x, val))),
+   setx(50),
+   print(x))
+`);
+// → 50
+
+//run(`set(quux, true)`);
+// → Some kind of ReferenceError
