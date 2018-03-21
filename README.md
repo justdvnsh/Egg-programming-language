@@ -4,7 +4,7 @@ A general purpose high level mathematical and functional programming language cr
 
 ## Getting Started
 ```
-*clone the repository
+clone the repository
 ```
 
 ### Prerequisites
@@ -12,7 +12,7 @@ A general purpose high level mathematical and functional programming language cr
 What things you need to install the software and how to install them
 
 ```
-*Javascript
+Javascript
 ```
 
 ## Built With
@@ -32,7 +32,7 @@ See also the list of [contributors](https://github.com/your/project/contributors
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+Currently this project is unclicensed
 
 ## Example
 
